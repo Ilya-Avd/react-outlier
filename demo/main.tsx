@@ -180,6 +180,142 @@ function EnabledDemo(): React.JSX.Element {
     )
 }
 
+// ─── 6. onFocusOutside (tab-out) ───────────────────────────────────────────────
+
+function FocusOutsideDemo(): React.JSX.Element {
+    const [open, setOpen] = useState(false)
+    const ref = useRef<HTMLDivElement>(null)
+
+    useClickOutside(ref, () => setOpen(false), {
+        onFocusOutside: () => setOpen(false),
+    })
+
+    return (
+        <Section
+            title="6. onFocusOutside (Tab-out)"
+            hint="Открой, поставь курсор в поле и нажми Tab — фокус уходит наружу, меню закрывается"
+        >
+            {open ? (
+                <div ref={ref} style={box}>
+                    <input placeholder="Печатай, потом Tab" autoFocus />
+                </div>
+            ) : (
+                <button onClick={() => setOpen(true)}>Открыть</button>
+            )}
+        </Section>
+    )
+}
+
+// ─── 7. Multiple refs ──────────────────────────────────────────────────────────
+
+function MultiRefDemo(): React.JSX.Element {
+    const [open, setOpen] = useState(false)
+    const panelRef = useRef<HTMLDivElement>(null)
+    const handleRef = useRef<HTMLDivElement>(null)
+
+    // Both elements count as "inside" — click on either keeps the panel open.
+    useClickOutside([panelRef, handleRef], () => setOpen(false))
+
+    return (
+        <Section
+            title="7. Несколько рефов"
+            hint="Две отдельные области считаются «внутри» — клик по любой не закрывает"
+        >
+            {open ? (
+                <div style={{ display: 'flex', gap: 12 }}>
+                    <div ref={handleRef} style={{ ...box, minWidth: 80 }}>
+                        Ручка
+                    </div>
+                    <div ref={panelRef} style={box}>
+                        Панель. Кликни по любой из двух — останется открыто.
+                    </div>
+                </div>
+            ) : (
+                <button onClick={() => setOpen(true)}>Открыть</button>
+            )}
+        </Section>
+    )
+}
+
+// ─── 8. Layered overlays ───────────────────────────────────────────────────────
+
+function LayeredDemo(): React.JSX.Element {
+    const [outer, setOuter] = useState(false)
+    const [inner, setInner] = useState(false)
+    const outerRef = useRef<HTMLDivElement>(null)
+    const innerRef = useRef<HTMLDivElement>(null)
+
+    useClickOutside(outerRef, () => setOuter(false), { layered: true })
+    useClickOutside(innerRef, () => setInner(false), { layered: true })
+
+    return (
+        <Section
+            title="8. Layered (вложенные слои)"
+            hint="Открой оба. Клик снаружи закрывает только верхний слой — сначала внутренний, потом внешний"
+        >
+            {outer ? (
+                <div ref={outerRef} style={box}>
+                    <p style={{ margin: '0 0 8px' }}>Внешний слой</p>
+                    {inner ? (
+                        <div ref={innerRef} style={{ ...box, background: '#ede9fe' }}>
+                            Внутренний слой (верхний)
+                        </div>
+                    ) : (
+                        <button onClick={() => setInner(true)}>Открыть внутренний</button>
+                    )}
+                </div>
+            ) : (
+                <button
+                    onClick={() => {
+                        setOuter(true)
+                        setInner(false)
+                    }}
+                >
+                    Открыть внешний
+                </button>
+            )}
+        </Section>
+    )
+}
+
+// ─── 9. onClickInside + contextmenu ─────────────────────────────────────────────
+
+function InsideAndContextDemo(): React.JSX.Element {
+    const [open, setOpen] = useState(false)
+    const [count, setCount] = useState(0)
+    const ref = useRef<HTMLDivElement>(null)
+
+    // Right-click outside closes; onClickInside counts clicks inside.
+    useClickOutside(ref, () => setOpen(false), {
+        event: 'contextmenu',
+        onClickInside: () => setCount((c) => c + 1),
+    })
+
+    return (
+        <Section
+            title="9. onClickInside + contextmenu"
+            hint="Правый клик снаружи закрывает. Обычный клик внутри считается счётчиком"
+        >
+            {open ? (
+                <div ref={ref} style={box}>
+                    Кликов внутри: <strong>{count}</strong>
+                    <br />
+                    Правый клик за пределами — закроется.
+                </div>
+            ) : (
+                <button
+                    onClick={() => {
+                        setOpen(true)
+                        setCount(0)
+                    }}
+                >
+                    Открыть
+                </button>
+            )}
+        </Section>
+    )
+}
+
 // ─── Layout ──────────────────────────────────────────────────────────────────
 
 function Section({
@@ -218,6 +354,10 @@ createRoot(document.getElementById('root')!).render(
             <IgnoreDemo />
             <PortalDemo />
             <EnabledDemo />
+            <FocusOutsideDemo />
+            <MultiRefDemo />
+            <LayeredDemo />
+            <InsideAndContextDemo />
         </div>
     </StrictMode>
 )
