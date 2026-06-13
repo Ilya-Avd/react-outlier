@@ -143,6 +143,15 @@ useClickOutside(ref, () => setOpen(false), { excludeScrollbar: true })
 useClickOutside(ref, () => setOpen(false), { layered: true })
 ```
 
+A layer joins the stack while it's active. If the component unmounts when closed
+that's automatic; if several layers live in one always-mounted component, gate
+each with `enabled` so only open layers compete for "topmost":
+
+```tsx
+useClickOutside(outerRef, () => setOuter(false), { layered: true, enabled: outer })
+useClickOutside(innerRef, () => setInner(false), { layered: true, enabled: inner })
+```
+
 ### Right-click outside
 
 ```tsx

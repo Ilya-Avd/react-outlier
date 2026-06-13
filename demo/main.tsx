@@ -245,8 +245,10 @@ function LayeredDemo(): React.JSX.Element {
     const outerRef = useRef<HTMLDivElement>(null)
     const innerRef = useRef<HTMLDivElement>(null)
 
-    useClickOutside(outerRef, () => setOuter(false), { layered: true })
-    useClickOutside(innerRef, () => setInner(false), { layered: true })
+    // enabled ties each layer's stack membership to whether it's actually open,
+    // so only the open layers compete for "topmost".
+    useClickOutside(outerRef, () => setOuter(false), { layered: true, enabled: outer })
+    useClickOutside(innerRef, () => setInner(false), { layered: true, enabled: inner })
 
     return (
         <Section

@@ -2,7 +2,8 @@ import { fireEvent, render } from '@testing-library/react'
 import { useRef } from 'react'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useClickOutside, type UseClickOutsideOptions } from '../useClickOutside'
+import type { UseClickOutsideOptions } from '../types'
+import { useClickOutside } from '../useClickOutside'
 
 // ─── Test component ───────────────────────────────────────────────────────────
 
