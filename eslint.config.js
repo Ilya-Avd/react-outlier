@@ -37,7 +37,7 @@ export default tseslint.config(
             '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
 
             // Unused variables and imports
-            'no-unused-vars': 'off', // отключаем базовое правило — не понимает TypeScript-типы
+            'no-unused-vars': 'off', // disable the base rule — it doesn't understand TypeScript types
             '@typescript-eslint/no-unused-vars': [
                 'error',
                 {

@@ -23,6 +23,7 @@
     "lint:fix": "eslint src demo eslint.config.js --fix"
   },
   "keywords": ["react", "hook", "click-outside", "typescript"],
+  "license": "MIT",
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"

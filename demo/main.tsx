@@ -31,13 +31,13 @@ function BasicDemo(): React.JSX.Element {
     useClickOutside(ref, () => setOpen(false))
 
     return (
-        <Section title="1. Basic" hint="Кликни снаружи синей рамки">
+        <Section title="1. Basic" hint="Click outside the blue box">
             {open ? (
                 <div ref={ref} style={box}>
-                    Я открыт. Кликни за пределами.
+                    I'm open. Click outside.
                 </div>
             ) : (
-                <button onClick={() => setOpen(true)}>Открыть</button>
+                <button onClick={() => setOpen(true)}>Open</button>
             )}
         </Section>
     )
@@ -54,13 +54,13 @@ function EscapeDemo(): React.JSX.Element {
     })
 
     return (
-        <Section title="2. Escape key" hint="Нажми Escape или кликни снаружи">
+        <Section title="2. Escape key" hint="Press Escape or click outside">
             {open ? (
                 <div ref={ref} style={box}>
-                    Закрывается по Escape и клику снаружи.
+                    Closes on Escape and on an outside click.
                 </div>
             ) : (
-                <button onClick={() => setOpen(true)}>Открыть</button>
+                <button onClick={() => setOpen(true)}>Open</button>
             )}
         </Section>
     )
@@ -83,16 +83,16 @@ function IgnoreDemo(): React.JSX.Element {
     return (
         <Section
             title="3. ignore option"
-            hint="Кнопка-триггер игнорируется — меню корректно переключается"
+            hint="The trigger button is ignored — the menu toggles correctly"
         >
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
                 <button ref={triggerRef} onClick={() => setOpen((v) => !v)}>
-                    {open ? 'Закрыть' : 'Открыть'} меню
+                    {open ? 'Close' : 'Open'} menu
                 </button>
                 {open && (
                     <div ref={menuRef} style={box}>
-                        Кликни по кнопке ещё раз — закроется. <br />
-                        Кликни здесь — останется открытым.
+                        Click the button again — it closes. <br />
+                        Click here — it stays open.
                     </div>
                 )}
             </div>
@@ -115,12 +115,12 @@ function PortalDemo(): React.JSX.Element {
     return (
         <Section
             title="4. Portal + ignore"
-            hint="Тултип рендерится в document.body, но не закрывает меню"
+            hint="The tooltip renders into document.body but doesn't close the menu"
         >
             <div ref={menuRef} style={box}>
-                <p style={{ margin: '0 0 8px' }}>Меню (в обычном DOM)</p>
+                <p style={{ margin: '0 0 8px' }}>Menu (in the regular DOM)</p>
                 <button onClick={() => setOpen((v) => !v)}>
-                    {open ? 'Скрыть' : 'Показать'} тултип из портала
+                    {open ? 'Hide' : 'Show'} portal tooltip
                 </button>
             </div>
 
@@ -140,8 +140,8 @@ function PortalDemo(): React.JSX.Element {
                             zIndex: 9999,
                         }}
                     >
-                        Я портал в document.body. <br />
-                        Клик по мне не закроет меню.
+                        I'm a portal in document.body. <br />
+                        Clicking me won't close the menu.
                     </div>,
                     document.body
                 )}
@@ -159,11 +159,11 @@ function EnabledDemo(): React.JSX.Element {
     useClickOutside(ref, () => setOpen(false), { enabled })
 
     return (
-        <Section title="5. enabled toggle" hint="Включай / выключай детектор на лету">
+        <Section title="5. enabled toggle" hint="Toggle the detector on the fly">
             <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                <button onClick={() => setOpen((v) => !v)}>{open ? 'Закрыть' : 'Открыть'}</button>
+                <button onClick={() => setOpen((v) => !v)}>{open ? 'Close' : 'Open'}</button>
                 <button onClick={() => setEnabled((v) => !v)}>
-                    Детектор:{' '}
+                    Detector:{' '}
                     <span style={{ ...chip, background: enabled ? '#dcfce7' : '#fee2e2' }}>
                         {enabled ? 'ON' : 'OFF'}
                     </span>
@@ -171,8 +171,8 @@ function EnabledDemo(): React.JSX.Element {
                 {open && (
                     <div ref={ref} style={box}>
                         {enabled
-                            ? 'Кликни снаружи — закроется.'
-                            : 'Детектор выключен — клик снаружи ничего не делает.'}
+                            ? 'Click outside — it closes.'
+                            : 'Detector off — an outside click does nothing.'}
                     </div>
                 )}
             </div>
@@ -193,14 +193,14 @@ function FocusOutsideDemo(): React.JSX.Element {
     return (
         <Section
             title="6. onFocusOutside (Tab-out)"
-            hint="Открой, поставь курсор в поле и нажми Tab — фокус уходит наружу, меню закрывается"
+            hint="Open it, focus the field and press Tab — focus leaves, the menu closes"
         >
             {open ? (
                 <div ref={ref} style={box}>
-                    <input placeholder="Печатай, потом Tab" autoFocus />
+                    <input placeholder="Type, then Tab" autoFocus />
                 </div>
             ) : (
-                <button onClick={() => setOpen(true)}>Открыть</button>
+                <button onClick={() => setOpen(true)}>Open</button>
             )}
         </Section>
     )
@@ -218,20 +218,20 @@ function MultiRefDemo(): React.JSX.Element {
 
     return (
         <Section
-            title="7. Несколько рефов"
-            hint="Две отдельные области считаются «внутри» — клик по любой не закрывает"
+            title="7. Multiple refs"
+            hint="Two separate regions count as 'inside' — clicking either won't close"
         >
             {open ? (
                 <div style={{ display: 'flex', gap: 12 }}>
                     <div ref={handleRef} style={{ ...box, minWidth: 80 }}>
-                        Ручка
+                        Handle
                     </div>
                     <div ref={panelRef} style={box}>
-                        Панель. Кликни по любой из двух — останется открыто.
+                        Panel. Click either of the two — it stays open.
                     </div>
                 </div>
             ) : (
-                <button onClick={() => setOpen(true)}>Открыть</button>
+                <button onClick={() => setOpen(true)}>Open</button>
             )}
         </Section>
     )
@@ -252,18 +252,18 @@ function LayeredDemo(): React.JSX.Element {
 
     return (
         <Section
-            title="8. Layered (вложенные слои)"
-            hint="Открой оба. Клик снаружи закрывает только верхний слой — сначала внутренний, потом внешний"
+            title="8. Layered (nested layers)"
+            hint="Open both. An outside click closes only the top layer — inner first, then outer"
         >
             {outer ? (
                 <div ref={outerRef} style={box}>
-                    <p style={{ margin: '0 0 8px' }}>Внешний слой</p>
+                    <p style={{ margin: '0 0 8px' }}>Outer layer</p>
                     {inner ? (
                         <div ref={innerRef} style={{ ...box, background: '#ede9fe' }}>
-                            Внутренний слой (верхний)
+                            Inner layer (top)
                         </div>
                     ) : (
-                        <button onClick={() => setInner(true)}>Открыть внутренний</button>
+                        <button onClick={() => setInner(true)}>Open inner</button>
                     )}
                 </div>
             ) : (
@@ -273,7 +273,7 @@ function LayeredDemo(): React.JSX.Element {
                         setInner(false)
                     }}
                 >
-                    Открыть внешний
+                    Open outer
                 </button>
             )}
         </Section>
@@ -296,13 +296,13 @@ function InsideAndContextDemo(): React.JSX.Element {
     return (
         <Section
             title="9. onClickInside + contextmenu"
-            hint="Правый клик снаружи закрывает. Обычный клик внутри считается счётчиком"
+            hint="Right-click outside closes. A normal click inside is counted"
         >
             {open ? (
                 <div ref={ref} style={box}>
-                    Кликов внутри: <strong>{count}</strong>
+                    Clicks inside: <strong>{count}</strong>
                     <br />
-                    Правый клик за пределами — закроется.
+                    Right-click outside — it closes.
                 </div>
             ) : (
                 <button
@@ -311,7 +311,7 @@ function InsideAndContextDemo(): React.JSX.Element {
                         setCount(0)
                     }}
                 >
-                    Открыть
+                    Open
                 </button>
             )}
         </Section>
@@ -349,7 +349,7 @@ createRoot(document.getElementById('root')!).render(
         <div style={{ fontFamily: 'sans-serif', padding: '40px 48px', maxWidth: 640 }}>
             <h1 style={{ margin: '0 0 8px' }}>react-outlier</h1>
             <p style={{ color: '#6b7280', marginBottom: 48 }}>
-                Демо всех возможностей хука useClickOutside
+                A demo of every useClickOutside feature
             </p>
             <BasicDemo />
             <EscapeDemo />

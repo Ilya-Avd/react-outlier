@@ -37,13 +37,13 @@ describe('useClickOutside', () => {
 
     // ── Basic ────────────────────────────────────────────────────────────────
 
-    it('вызывает handler при mousedown снаружи', () => {
+    it('calls handler on mousedown outside', () => {
         const { getByTestId } = render(<Setup handler={handler} />)
         fireEvent.mouseDown(getByTestId('outside'))
         expect(handler).toHaveBeenCalledTimes(1)
     })
 
-    it('не вызывает handler при mousedown внутри', () => {
+    it('does not call handler on mousedown inside', () => {
         const { getByTestId } = render(<Setup handler={handler} />)
         fireEvent.mouseDown(getByTestId('inside'))
         expect(handler).not.toHaveBeenCalled()
@@ -51,13 +51,13 @@ describe('useClickOutside', () => {
 
     // ── enabled ──────────────────────────────────────────────────────────────
 
-    it('не вызывает handler когда enabled=false', () => {
+    it('does not call handler when enabled=false', () => {
         const { getByTestId } = render(<Setup handler={handler} options={{ enabled: false }} />)
         fireEvent.mouseDown(getByTestId('outside'))
         expect(handler).not.toHaveBeenCalled()
     })
 
-    it('начинает реагировать после включения enabled', () => {
+    it('starts reacting after enabled is turned on', () => {
         const { getByTestId, rerender } = render(
             <Setup handler={handler} options={{ enabled: false }} />
         )
@@ -71,7 +71,7 @@ describe('useClickOutside', () => {
 
     // ── Escape ───────────────────────────────────────────────────────────────
 
-    it('вызывает onEscape при нажатии Escape', () => {
+    it('calls onEscape when Escape is pressed', () => {
         const onEscape = vi.fn()
         render(<Setup handler={handler} options={{ onEscape }} />)
         fireEvent.keyDown(document, { key: 'Escape' })
@@ -79,7 +79,7 @@ describe('useClickOutside', () => {
         expect(handler).not.toHaveBeenCalled()
     })
 
-    it('не вызывает onEscape для других клавиш', () => {
+    it('does not call onEscape for other keys', () => {
         const onEscape = vi.fn()
         render(<Setup handler={handler} options={{ onEscape }} />)
         fireEvent.keyDown(document, { key: 'Enter' })
@@ -87,7 +87,7 @@ describe('useClickOutside', () => {
         expect(onEscape).not.toHaveBeenCalled()
     })
 
-    it('не вешает keydown listener если onEscape не передан', () => {
+    it('does not attach a keydown listener when onEscape is not provided', () => {
         const addSpy = vi.spyOn(document, 'addEventListener')
         render(<Setup handler={handler} />)
         const keydownCalls = addSpy.mock.calls.filter(([type]) => type === 'keydown')
@@ -97,7 +97,7 @@ describe('useClickOutside', () => {
 
     // ── onClickInside ────────────────────────────────────────────────────────────
 
-    it('вызывает onClickInside при клике внутри', () => {
+    it('calls onClickInside on a click inside', () => {
         const onClickInside = vi.fn()
         const { getByTestId } = render(<Setup handler={handler} options={{ onClickInside }} />)
         fireEvent.mouseDown(getByTestId('inside'))
@@ -105,7 +105,7 @@ describe('useClickOutside', () => {
         expect(handler).not.toHaveBeenCalled()
     })
 
-    it('не вызывает onClickInside при клике снаружи', () => {
+    it('does not call onClickInside on a click outside', () => {
         const onClickInside = vi.fn()
         const { getByTestId } = render(<Setup handler={handler} options={{ onClickInside }} />)
         fireEvent.mouseDown(getByTestId('outside'))
@@ -115,21 +115,21 @@ describe('useClickOutside', () => {
 
     // ── onFocusOutside ─────────────────────────────────────────────────────────
 
-    it('вызывает onFocusOutside когда фокус уходит наружу', () => {
+    it('calls onFocusOutside when focus moves outside', () => {
         const onFocusOutside = vi.fn()
         const { getByTestId } = render(<Setup handler={handler} options={{ onFocusOutside }} />)
         fireEvent.focusIn(getByTestId('outside'))
         expect(onFocusOutside).toHaveBeenCalledTimes(1)
     })
 
-    it('не вызывает onFocusOutside когда фокус внутри', () => {
+    it('does not call onFocusOutside when focus is inside', () => {
         const onFocusOutside = vi.fn()
         const { getByTestId } = render(<Setup handler={handler} options={{ onFocusOutside }} />)
         fireEvent.focusIn(getByTestId('inside'))
         expect(onFocusOutside).not.toHaveBeenCalled()
     })
 
-    it('не вешает focusin listener если onFocusOutside не передан', () => {
+    it('does not attach a focusin listener when onFocusOutside is not provided', () => {
         const addSpy = vi.spyOn(document, 'addEventListener')
         render(<Setup handler={handler} />)
         const focusinCalls = addSpy.mock.calls.filter(([type]) => type === 'focusin')
@@ -139,7 +139,7 @@ describe('useClickOutside', () => {
 
     // ── ignore ───────────────────────────────────────────────────────────────
 
-    it('игнорирует клик на элемент из ignore', () => {
+    it('ignores a click on an element from ignore', () => {
         function WithIgnore(): React.JSX.Element {
             const ref = useRef<HTMLDivElement>(null)
             const ignoreRef = useRef<HTMLButtonElement>(null)
@@ -165,7 +165,7 @@ describe('useClickOutside', () => {
 
     // ── pointer-down-inside guard (text-selection drag) ───────────────────────
 
-    it('не закрывает при выделении текста: pointerdown внутри → click снаружи', () => {
+    it('does not dismiss on text selection: pointerdown inside → click outside', () => {
         const { getByTestId } = render(<Setup handler={handler} options={{ event: 'click' }} />)
         // User presses inside (starts selecting text), drags out and releases outside.
         fireEvent.pointerDown(getByTestId('inside'))
@@ -173,7 +173,7 @@ describe('useClickOutside', () => {
         expect(handler).not.toHaveBeenCalled()
     })
 
-    it('закрывает при обычном клике снаружи: pointerdown снаружи → click снаружи', () => {
+    it('dismisses on a normal outside click: pointerdown outside → click outside', () => {
         const { getByTestId } = render(<Setup handler={handler} options={{ event: 'click' }} />)
         fireEvent.pointerDown(getByTestId('outside'))
         fireEvent.click(getByTestId('outside'))
@@ -182,7 +182,7 @@ describe('useClickOutside', () => {
 
     // ── multiple refs ───────────────────────────────────────────────────────────
 
-    it('считает "внутри" любой из переданных рефов (массив)', () => {
+    it('treats any of the passed refs as "inside" (array)', () => {
         function MultiRef(): React.JSX.Element {
             const a = useRef<HTMLDivElement>(null)
             const b = useRef<HTMLDivElement>(null)
@@ -237,7 +237,7 @@ describe('useClickOutside', () => {
         )
     }
 
-    it('layered: на клик снаружи реагирует только верхний слой', () => {
+    it('layered: only the top layer reacts to an outside click', () => {
         const onA = vi.fn()
         const onB = vi.fn()
         const { getByTestId } = render(<Layers onA={onA} onB={onB} />)
@@ -246,7 +246,7 @@ describe('useClickOutside', () => {
         expect(onA).not.toHaveBeenCalled()
     })
 
-    it('layered: на Escape реагирует только верхний слой', () => {
+    it('layered: only the top layer reacts to Escape', () => {
         const escA = vi.fn()
         const escB = vi.fn()
         render(<Layers onA={vi.fn()} onB={vi.fn()} escA={escA} escB={escB} />)
@@ -257,19 +257,19 @@ describe('useClickOutside', () => {
 
     // ── Touch ────────────────────────────────────────────────────────────────
 
-    it('вызывает handler при touchstart снаружи', () => {
+    it('calls handler on touchstart outside', () => {
         const { getByTestId } = render(<Setup handler={handler} />)
         fireEvent.touchStart(getByTestId('outside'))
         expect(handler).toHaveBeenCalledTimes(1)
     })
 
-    it('не вызывает handler при touchstart внутри', () => {
+    it('does not call handler on touchstart inside', () => {
         const { getByTestId } = render(<Setup handler={handler} />)
         fireEvent.touchStart(getByTestId('inside'))
         expect(handler).not.toHaveBeenCalled()
     })
 
-    it('не дублирует вызов при touchstart + mousedown (мобильный браузер)', () => {
+    it('does not double-fire on touchstart + mousedown (mobile browser)', () => {
         const { getByTestId } = render(<Setup handler={handler} />)
         const outside = getByTestId('outside')
         // Mobile sequence: touchstart fires first, then synthesized mousedown
@@ -281,7 +281,7 @@ describe('useClickOutside', () => {
 
     // ── excludeScrollbar ────────────────────────────────────────────────────────
 
-    it('игнорирует клик по скроллбару при excludeScrollbar', () => {
+    it('ignores a scrollbar click when excludeScrollbar is set', () => {
         // jsdom has no layout, so fake the client area: 800×600.
         Object.defineProperty(document.documentElement, 'clientWidth', {
             value: 800,
@@ -309,7 +309,7 @@ describe('useClickOutside', () => {
 
     // ── detectIframe ───────────────────────────────────────────────────────────
 
-    it('вызывает handler при уходе фокуса в iframe (detectIframe)', async () => {
+    it('calls handler when focus moves into an iframe (detectIframe)', async () => {
         const iframe = document.createElement('iframe')
         document.body.appendChild(iframe)
         render(<Setup handler={handler} options={{ detectIframe: true }} />)
@@ -322,7 +322,7 @@ describe('useClickOutside', () => {
         iframe.remove()
     })
 
-    it('не вызывает handler по window blur без detectIframe', async () => {
+    it('does not call handler on window blur without detectIframe', async () => {
         const iframe = document.createElement('iframe')
         document.body.appendChild(iframe)
         render(<Setup handler={handler} />)
@@ -337,7 +337,7 @@ describe('useClickOutside', () => {
 
     // ── Cleanup ───────────────────────────────────────────────────────────────
 
-    it('снимает listeners после размонтирования', () => {
+    it('removes listeners after unmount', () => {
         const removeSpy = vi.spyOn(document, 'removeEventListener')
         const { unmount } = render(<Setup handler={handler} />)
         unmount()
@@ -346,7 +346,7 @@ describe('useClickOutside', () => {
         removeSpy.mockRestore()
     })
 
-    it('не вызывает handler после размонтирования', () => {
+    it('does not call handler after unmount', () => {
         const { unmount } = render(<Setup handler={handler} />)
         unmount()
         fireEvent.mouseDown(document.body)
@@ -355,7 +355,7 @@ describe('useClickOutside', () => {
 
     // ── event option ──────────────────────────────────────────────────────────
 
-    it('слушает contextmenu при event="contextmenu"', () => {
+    it('listens to contextmenu when event="contextmenu"', () => {
         const { getByTestId } = render(
             <Setup handler={handler} options={{ event: 'contextmenu' }} />
         )
@@ -365,7 +365,7 @@ describe('useClickOutside', () => {
         expect(handler).toHaveBeenCalledTimes(1)
     })
 
-    it('слушает click вместо mousedown при event="click"', () => {
+    it('listens to click instead of mousedown when event="click"', () => {
         const { getByTestId } = render(<Setup handler={handler} options={{ event: 'click' }} />)
         fireEvent.mouseDown(getByTestId('outside'))
         expect(handler).not.toHaveBeenCalled()
