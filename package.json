@@ -1,9 +1,11 @@
 {
   "name": "react-outlier",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Robust useClickOutside hook for React — handles portals, Shadow DOM, touch, Escape, and more",
   "type": "module",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "./dist/react-outlier.umd.js",
   "module": "./dist/react-outlier.es.js",
   "types": "./dist/types/index.d.ts",
@@ -23,7 +25,12 @@
     "lint": "eslint src demo eslint.config.js",
     "lint:fix": "eslint src demo eslint.config.js --fix"
   },
-  "keywords": ["react", "hook", "click-outside", "typescript"],
+  "keywords": [
+    "react",
+    "hook",
+    "click-outside",
+    "typescript"
+  ],
   "license": "MIT",
   "author": "Ilya (https://github.com/Ilya-Avd)",
   "repository": {
